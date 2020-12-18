@@ -32,10 +32,10 @@
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.comboBoxDEP = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
-            this.label3 = new System.Windows.Forms.Label();
             this.button2 = new System.Windows.Forms.Button();
+            this.buttonExitSavePrint = new System.Windows.Forms.Button();
+            this.buttonPrint = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -47,81 +47,88 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Location = new System.Drawing.Point(12, 46);
+            this.dataGridView1.Location = new System.Drawing.Point(12, 65);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.ReadOnly = true;
             this.dataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridView1.Size = new System.Drawing.Size(1018, 392);
+            this.dataGridView1.Size = new System.Drawing.Size(1021, 444);
             this.dataGridView1.TabIndex = 0;
             // 
             // comboBoxDEP
             // 
             this.comboBoxDEP.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxDEP.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.comboBoxDEP.FormattingEnabled = true;
-            this.comboBoxDEP.Location = new System.Drawing.Point(90, 12);
+            this.comboBoxDEP.Location = new System.Drawing.Point(112, 23);
             this.comboBoxDEP.Name = "comboBoxDEP";
-            this.comboBoxDEP.Size = new System.Drawing.Size(121, 21);
+            this.comboBoxDEP.Size = new System.Drawing.Size(121, 24);
             this.comboBoxDEP.TabIndex = 1;
             this.comboBoxDEP.SelectedIndexChanged += new System.EventHandler(this.comboBox_SelectedIndexChanged);
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(9, 15);
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label1.Location = new System.Drawing.Point(12, 26);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(60, 13);
+            this.label1.Size = new System.Drawing.Size(85, 17);
             this.label1.TabIndex = 2;
             this.label1.Text = "Цех/отдел";
             // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(227, 15);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(60, 13);
-            this.label2.TabIndex = 3;
-            this.label2.Text = "Цех/отдел";
-            // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(389, 5);
+            this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.button1.Location = new System.Drawing.Point(313, 5);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(335, 32);
+            this.button1.Size = new System.Drawing.Size(154, 54);
             this.button1.TabIndex = 4;
             this.button1.Text = "ОТКРЫТЬ ДЛЯ ПРОСМОТРА / РЕДАКТИРОВАНИЯ";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
-            // label3
-            // 
-            this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(12, 441);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(60, 13);
-            this.label3.TabIndex = 5;
-            this.label3.Text = "Цех/отдел";
-            // 
             // button2
             // 
             this.button2.Enabled = false;
-            this.button2.Location = new System.Drawing.Point(777, 5);
+            this.button2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.button2.Location = new System.Drawing.Point(473, 5);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(253, 32);
+            this.button2.Size = new System.Drawing.Size(154, 54);
             this.button2.TabIndex = 6;
             this.button2.Text = "СФОРМИРОВАТЬ ДОКУМЕНТ";
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
+            // buttonExitSavePrint
+            // 
+            this.buttonExitSavePrint.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.buttonExitSavePrint.Location = new System.Drawing.Point(879, 5);
+            this.buttonExitSavePrint.Name = "buttonExitSavePrint";
+            this.buttonExitSavePrint.Size = new System.Drawing.Size(154, 54);
+            this.buttonExitSavePrint.TabIndex = 7;
+            this.buttonExitSavePrint.Text = "ВЫХОД";
+            this.buttonExitSavePrint.UseVisualStyleBackColor = true;
+            this.buttonExitSavePrint.Click += new System.EventHandler(this.buttonExitSavePrint_Click);
+            // 
+            // buttonPrint
+            // 
+            this.buttonPrint.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.buttonPrint.Location = new System.Drawing.Point(633, 5);
+            this.buttonPrint.Name = "buttonPrint";
+            this.buttonPrint.Size = new System.Drawing.Size(154, 54);
+            this.buttonPrint.TabIndex = 8;
+            this.buttonPrint.Text = "ПЕЧАТЬ ЯРЛЫКА";
+            this.buttonPrint.UseVisualStyleBackColor = true;
+            this.buttonPrint.Click += new System.EventHandler(this.buttonPrint_Click);
+            // 
             // FormCorrection
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1042, 470);
+            this.ClientSize = new System.Drawing.Size(1042, 521);
+            this.Controls.Add(this.buttonPrint);
+            this.Controls.Add(this.buttonExitSavePrint);
             this.Controls.Add(this.button2);
-            this.Controls.Add(this.label3);
             this.Controls.Add(this.button1);
-            this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.comboBoxDEP);
             this.Controls.Add(this.dataGridView1);
@@ -143,9 +150,9 @@
         private System.Windows.Forms.DataGridView dataGridView1;
         private System.Windows.Forms.ComboBox comboBoxDEP;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button buttonExitSavePrint;
+        private System.Windows.Forms.Button buttonPrint;
     }
 }

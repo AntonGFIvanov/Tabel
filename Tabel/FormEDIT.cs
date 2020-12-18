@@ -1,12 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Data.OleDb;
-using System.Drawing;
 using System.Globalization;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
 namespace Tabel
@@ -14,6 +8,10 @@ namespace Tabel
     public partial class FormEDIT : Form
     {
         string con = @"Provider=Microsoft.Jet.OLEDB.4.0;Data Source=d:\TABEL\BASE\;Extended Properties=dBASE IV;User ID=Admin;Password=";
+
+        // Конструктор
+
+        #region Конструктор по умолчанию
 
         public FormEDIT(double[] massiveTemp, string department, string FIO)
         {
@@ -25,6 +23,13 @@ namespace Tabel
             textBoxDEP.Text = department;
             textBoxFIO.Text = FIO;
         }
+
+        #endregion
+
+
+        // Функции
+
+        #region Заполнение массива
 
         private void MassiveDouble(double[] massiveTemp)
         {
@@ -64,7 +69,14 @@ namespace Tabel
             textBoxDRZ.Text = Convert.ToString(massiveTemp[i++]);
             textBoxCAS7.Text = Convert.ToString(massiveTemp[i++]);
             textBoxNP.Text = Convert.ToString(massiveTemp[i++]);
-        }        
+        }
+
+        #endregion
+
+
+        // События
+
+        #region Нажатие кнопки Принять изменения
 
         private void buttonUPDATE_Click(object sender, EventArgs e)
         {
@@ -104,11 +116,11 @@ namespace Tabel
             try
             {
                 using (OleDbConnection cn = new OleDbConnection(con))
-                {                    
+                {
                     cn.Open();
                     OleDbCommand command = new OleDbCommand(strQueryUpdate, cn);
                     command.ExecuteNonQuery();
-                    MessageBox.Show(" \nOK!\n!" );
+                    MessageBox.Show(" \nOK!\n!");
                 }
             }
             catch (Exception ex)
@@ -117,14 +129,16 @@ namespace Tabel
             }
         }
 
+        #endregion
+
+        #region Нажатие кнопки Отмена
+
         private void buttonCLOSE_Click(object sender, EventArgs e)
         {
-            Close();
+            this.Close();
         }
 
-        private void FormEDIT_Load(object sender, EventArgs e)
-        {
+        #endregion
 
-        }
     }
 }

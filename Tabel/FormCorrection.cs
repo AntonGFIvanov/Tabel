@@ -1,67 +1,31 @@
 ﻿using Microsoft.Office.Interop.Excel;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Data.OleDb;
 using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
 namespace Tabel
 {
     public partial class FormCorrection : Form
     {
-        static string con = @"Provider=Microsoft.Jet.OLEDB.4.0;Data Source=d:\TABEL\BASE\;Extended Properties=dBASE IV;User ID=Admin;Password=";
+        static string connectionStringBase = @"Provider=Microsoft.Jet.OLEDB.4.0;Data Source=d:\TABEL\BASE\;Extended Properties=dBASE IV;User ID=Admin;Password=";
         string department;
+
+        //Конструктор
 
         public FormCorrection()
         {
             InitializeComponent();
         }
 
-        private void FormCorrection_Load(object sender, EventArgs e)
-        {
-            try
-            {
-                //Проверка табеля на актуальность данных
-                int monthNOW = DateTime.Now.Month;
-                if (DateTime.Now.Day < 4)
-                    monthNOW = monthNOW - 1;
 
-                string strQueryDate = "select distinct data from tabel";
-                int monthFROMbase = DateTimeSELECT(strQueryDate).Month;
-                if (monthNOW != monthFROMbase)
-                {
-                    //MessageBox.Show("Текущая версия табеля устарела!\nВыполните загрузку табеля для корректировки!");
-                    //Close();
-                }
-                else
-                {
-                    //MessageBox.Show(monthNOW + "\n" + monthFROMbase);
+        // Функции
 
-                    string strQueryKC = "select DISTINCT kc  from tabel";
-                    System.Data.DataTable dataTable = FormGeneral.DTselect(strQueryKC, con);
-
-                    comboBoxDEP.DataSource = dataTable.DefaultView;
-                    comboBoxDEP.DisplayMember = "kc";
-                    comboBoxDEP.ValueMember = "KC";
-                    comboBoxDEP.SelectedIndex = 0;
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Выполните загрузку табеля для корректировки! \n" + ex.Message);
-                Close();
-            }
-        }
-
-        
+        #region Обновление dataGridView1
 
         public static void UpDataGrid(ComboBox cmbBox, DataGridView dgview)
-        {            
+        {
             string strQuery = $@"Select distinct tabel.tn as ТН, sprrab.fam as Фамилия, sprrab.imq as Имя, sprrab.otc as Отчество,
                                            tabel.dh as 'дни хоз',tabel.dnf as 'дни факт',tabel.dnp as 'дни простоя',tabel.dno as 'дни отп',
                                            tabel.dnr as 'родовые',tabel.dou as 'уч отп',tabel.dpro as 'прочие',tabel.adm as 'адм отп',
@@ -71,14 +35,14 @@ namespace Tabel
                                            tabel.cas_pr as 'часы простоя',tabel.noc2 as 'ночн 2',tabel.nowsw as 'сверхур 1 опл',tabel.nowpr as 'праз 1 опл вых',
                                            tabel.nowwh as 'доп день отд',tabel.med as 'мед спр',tabel.kolh as 'донор б/о',tabel.DK as 'ком служ',
                                            tabel.DRZ as 'в др цехах',tabel.CAS7 as 'доп час 7+1', tabel.NP as 'по среднему НПД'
-                                           from tabel,sprrab where tabel.kc={Convert.ToInt32(cmbBox.Text)} and sprrab.kc={Convert.ToInt32(cmbBox.Text)} and tabel.tn=sprrab.tn and (sprrab.puvl=0 or sprrab.puvl=1 or sprrab.puvl=5 or sprrab.puvl=9) order by sprrab.fam , sprrab.imq , sprrab.otc";   
-                      /*puvl - признак увольнения/перевода
-                      // 0 - текущее место работы
-                      // 1 - перевод
-                      // 5 - декрет
-                      // 9 - уволен
-                      */
-            dgview.DataSource = FormGeneral.DTselect(strQuery, con);
+                                           from tabel,sprrab where tabel.kc={Convert.ToInt32(cmbBox.Text)} and sprrab.kc={Convert.ToInt32(cmbBox.Text)} and tabel.tn=sprrab.tn and (sprrab.puvl=0 or sprrab.puvl=1 or sprrab.puvl=5 or sprrab.puvl=9) order by sprrab.fam , sprrab.imq , sprrab.otc";
+            /*puvl - признак увольнения/перевода
+            // 0 - текущее место работы
+            // 1 - перевод
+            // 5 - декрет
+            // 9 - уволен
+            */
+            dgview.DataSource = FormGeneral.DTselect(strQuery, connectionStringBase);
 
             for (int k = 0; k < dgview.ColumnCount; k++)
             {
@@ -98,33 +62,16 @@ namespace Tabel
                         dgview.Rows[i].Cells[j].Style.BackColor = Color.LightCoral;
                 }
             }
-            //label3.Text = "Численный состав: " + dataGridView1.RowCount;
         }
 
-        private void comboBox_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            try
-            {
-                //string strQuery = $"Select * from tabel ";
-                //string strQuery = $"Select * from tabel where kc={Convert.ToInt32(comboBoxDEP.Text)}";
+        #endregion
 
-                UpDataGrid(comboBoxDEP, dataGridView1);
-                
-                string strQueryNAME = $"select knz  from sp where  kc={Convert.ToInt32(comboBoxDEP.Text)}";
-                label2.Text = stringSELECT(strQueryNAME);
-
-                department = $"{comboBoxDEP.Text}  |  {label2.Text}";
-            }
-            catch 
-            {
-                return;
-            }
-        }
+        #region Запросы к базам данных
 
         public static string stringSELECT(string strQUERY)
-        {            
+        {
             string str = "";
-            using (OleDbConnection CN1 = new OleDbConnection(con))
+            using (OleDbConnection CN1 = new OleDbConnection(connectionStringBase))
             {
                 CN1.Open();
                 OleDbCommand command = new OleDbCommand(strQUERY, CN1);
@@ -137,9 +84,13 @@ namespace Tabel
             }
         }
 
+        #endregion
+
+        #region Получение даты
+
         public static DateTime DateTimeSELECT(string strQUERY)
         {
-            using (OleDbConnection CN1 = new OleDbConnection(con))
+            using (OleDbConnection CN1 = new OleDbConnection(connectionStringBase))
             {
                 DateTime temp = new DateTime(2000, 01, 01);
                 CN1.Open();
@@ -153,74 +104,15 @@ namespace Tabel
             }
         }
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-            double[] massiveTemp=new double[dataGridView1.ColumnCount];
-            //string[] massiveTempStr = new string[10];
-            int indexRow=dataGridView1.CurrentRow.Index;
+        #endregion
 
-            for (int i = 0; i < dataGridView1.ColumnCount; i++) 
-            {
-                if (i == 1 || i == 2 || i == 3)
-                    massiveTemp[i] = 0;
-                else if (!(dataGridView1.Rows[indexRow].Cells[i].Value.ToString() == "0") && !(dataGridView1.Rows[indexRow].Cells[i].Value.ToString() == ""))   
-                    massiveTemp[i] = Convert.ToDouble(dataGridView1.Rows[indexRow].Cells[i].Value);
-                else
-                    massiveTemp[i] = 0;
-            }
-            //string tn = dataGridView1.Rows[indexRow].Cells[0].Value.ToString();
-            string FIO = $"{dataGridView1.Rows[indexRow].Cells[1].Value}  {dataGridView1.Rows[indexRow].Cells[2].Value}  {dataGridView1.Rows[indexRow].Cells[3].Value}";
-            FormEDIT formTemp = new FormEDIT(massiveTemp, department, FIO);
-            formTemp.ShowDialog();
-        }
-
-        private void FormCorrection_Activated(object sender, EventArgs e)
-        {
-            if (dataGridView1.DataSource == null)
-                return;
-            else
-                UpDataGrid(comboBoxDEP, dataGridView1);
-        }
-
-        private void FormCorrection_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            if (dataGridView1.DataSource == null)
-                return;
-            else
-            {
-                
-                DialogResult dialogResult = MessageBox.Show("Если были произведены измения, необходима выгрузка данных.\nВыгрузить данные для бухгалтерии?", "Выгрузка данных", MessageBoxButtons.YesNo);
-                if (dialogResult == DialogResult.Yes)
-                {                     
-                    string strQueryDate = "select distinct data from tabel";
-                    int monthFROMbase = DateTimeSELECT(strQueryDate).Month;
-
-                    string sourcefn, sourcefnPer;  //Имя файла,который копируем
-                    int kcname = FormGeneral.INTSelectDBF("select kc from tabel order by kc", con);
-                    sourcefn = "T" + kcname;
-                    sourcefnPer = "P" + kcname + monthFROMbase.ToString();
-                    FormGeneral.CopyFile("d:\\TABEL\\BASE\\TABEL.DBF", "\\\\Mztm\\Trmash_Data\\Maz\\NEWTABEL\\" + sourcefn + ".DBF");
-                    FormGeneral.CopyFile("d:\\TABEL\\BASE\\period.DBF", "\\\\Mztm\\Trmash_Data\\Maz\\NEWTABEL\\BaseP\\" + sourcefnPer + ".DBF");
-                    FormGeneral.InsertCommonFile(sourcefn, kcname);
-                    PrintControlLabel(dataGridView1);
-                }
-                else if (dialogResult == DialogResult.No)
-                {
-                    return;
-                }
-            }
-        }
-
-        private void button2_Click(object sender, EventArgs e)
-        {
-            DataGridToExcel(dataGridView1);
-        }
+        #region Формирование документа Excel
 
         public void DataGridToExcel(DataGridView GridSourse)
         {
             try
             {
-                string fileExcel = $"d:\\TABEL\\Табель{label2.Text}{DateTime.Now.Month}.xls";
+                string fileExcel = $"d:\\TABEL\\Табель{comboBoxDEP.Text}{DateTime.Now.Month}.xls";
 
                 CopyFile("d:\\TABEL\\COPY\\MyFile.xls", fileExcel);
                 Microsoft.Office.Interop.Excel.Application ExcelApp = new Microsoft.Office.Interop.Excel.Application();
@@ -238,7 +130,7 @@ namespace Tabel
                     {
                         ExcelApp.Cells[i + 3, 1] = i + 1;
                         ExcelApp.Cells[i + 3, 1].Borders.Color = BorderStyle.FixedSingle;
-                        
+
                         if (!(dataGridView1.Rows[i].Cells[j].Value.ToString() == "0"))
                         {
                             ExcelApp.Cells[i + 3, j + 2] = dataGridView1.Rows[i].Cells[j].Value;
@@ -266,6 +158,10 @@ namespace Tabel
             }
         }
 
+        #endregion
+
+        #region Копирование файлов
+
         void CopyFile(string sourcefn, string destinfn)
         {
             //sourcefn - файл,который копируем,с путем
@@ -274,6 +170,7 @@ namespace Tabel
             fn.CopyTo(destinfn, true);
         }
 
+        #endregion
 
         #region Печать контрольного ярлыка
         void PrintControlLabel(DataGridView datagrid)
@@ -344,7 +241,7 @@ namespace Tabel
             //Таблица.
             ExcelWorkSheet = (Worksheet)ExcelWorkBook.Worksheets.get_Item(1);
 
-            ExcelApp.Cells[1, 2] = label2.Text;
+            ExcelApp.Cells[1, 2] = comboBoxDEP.Text;
 
             ExcelApp.Cells[6, 3] = dnf;
             ExcelApp.Cells[7, 3] = cas;
@@ -376,12 +273,170 @@ namespace Tabel
             ExcelApp.Cells[33, 3] = dpro;
             ExcelApp.Cells[34, 3] = gos;
             ExcelApp.Cells[35, 3] = dou;
-            
+
             //Вызываем эксель.
             ExcelApp.Visible = true;
             ExcelApp.UserControl = true;
             //ExcelWorkSheet.PrintOutEx(); //печать ярлыка в фоновом режиме
         }
         #endregion
+
+        // События
+
+        #region Загрузка формы
+
+        private void FormCorrection_Load(object sender, EventArgs e)
+        {
+            try
+            {
+                //Проверка табеля на актуальность данных
+                int monthNOW = DateTime.Now.Month;
+                if (DateTime.Now.Day < 5)
+                {
+                    //monthNOW = monthNOW - 1;
+                    monthNOW--;
+                }
+                string strQueryDate = "select distinct data from tabel";
+                int monthFROMbase = DateTimeSELECT(strQueryDate).Month;
+                if (monthNOW != monthFROMbase)
+                {
+                    MessageBox.Show("Текущая версия табеля устарела!\nВыполните загрузку табеля для корректировки!");
+                    Close();
+                }
+                else
+                {
+                    string strQueryKC = "select DISTINCT kc  from tabel";
+                    System.Data.DataTable dataTable = FormGeneral.DTselect(strQueryKC, connectionStringBase);
+                    comboBoxDEP.DataSource = dataTable.DefaultView;
+                    comboBoxDEP.DisplayMember = "kc";
+                    comboBoxDEP.ValueMember = "KC";
+                    comboBoxDEP.SelectedIndex = 0;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Выполните загрузку табеля для корректировки! \n" + ex.Message);
+                Close();
+            }
+        }
+
+        #endregion
+
+        #region Выбор значения из комбобокса
+        private void comboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                UpDataGrid(comboBoxDEP, dataGridView1);
+
+                //string strQueryNAME = $"select knz  from sp where  kc={Convert.ToInt32(comboBoxDEP.Text)}";
+                //label2.Text = stringSELECT(strQueryNAME);
+                //department = $"{comboBoxDEP.Text}  |  {label2.Text}";
+                department = $"{comboBoxDEP.Text}";
+            }
+            catch
+            {
+                return;
+            }
+        }
+
+        #endregion
+
+        #region Нажатие кнопки 1
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            double[] massiveTemp = new double[dataGridView1.ColumnCount];
+            int indexRow = dataGridView1.CurrentRow.Index;
+
+            for (int i = 0; i < dataGridView1.ColumnCount; i++)
+            {
+                if (i == 1 || i == 2 || i == 3)
+                    massiveTemp[i] = 0;
+                else if (!(dataGridView1.Rows[indexRow].Cells[i].Value.ToString() == "0") && !(dataGridView1.Rows[indexRow].Cells[i].Value.ToString() == ""))
+                    massiveTemp[i] = Convert.ToDouble(dataGridView1.Rows[indexRow].Cells[i].Value);
+                else
+                    massiveTemp[i] = 0;
+            }
+            string FIO = $"{dataGridView1.Rows[indexRow].Cells[1].Value}  {dataGridView1.Rows[indexRow].Cells[2].Value}  {dataGridView1.Rows[indexRow].Cells[3].Value}";
+            FormEDIT formTemp = new FormEDIT(massiveTemp, department, FIO);
+            formTemp.ShowDialog();
+        }
+
+        #endregion
+
+        #region Активация формы
+
+        private void FormCorrection_Activated(object sender, EventArgs e)
+        {
+            if (dataGridView1.DataSource == null)
+                return;
+            else
+                UpDataGrid(comboBoxDEP, dataGridView1);
+        }
+
+        #endregion
+
+        #region Закрытие формы
+
+        private void FormCorrection_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (dataGridView1.DataSource == null)
+                return;
+            else
+            {
+                /*
+                DialogResult dialogResult = MessageBox.Show("Если были произведены измения, необходима выгрузка данных.\nВыгрузить данные для бухгалтерии?", "Выгрузка данных", MessageBoxButtons.YesNo);
+                if (dialogResult == DialogResult.Yes)
+                {
+                    string strQueryDate = "select distinct data from tabel";
+                    int monthFROMbase = DateTimeSELECT(strQueryDate).Month;
+                    string sourcefn, sourcefnPer;  //Имя файла,который копируем
+                    int kcname = FormGeneral.INTSelectDBF("select kc from tabel order by kc", connectionStringBase);
+                    sourcefn = "T" + kcname;
+                    sourcefnPer = "P" + kcname + monthFROMbase.ToString();
+                    FormGeneral.CopyFile("d:\\TABEL\\BASE\\TABEL.DBF", "\\\\Mztm\\Trmash_Data\\Maz\\NEWTABEL\\" + sourcefn + ".DBF");
+                    FormGeneral.CopyFile("d:\\TABEL\\BASE\\period.DBF", "\\\\Mztm\\Trmash_Data\\Maz\\NEWTABEL\\BaseP\\" + sourcefnPer + ".DBF");
+                    FormGeneral.InsertCommonFile(sourcefn, kcname);
+                    //PrintControlLabel(dataGridView1);
+                }
+                else if (dialogResult == DialogResult.No)
+                {
+                    return;
+                }
+                */
+                return;
+            }
+        }
+
+        #endregion
+
+        #region Нажатие кнопки Выход
+
+        private void buttonExitSavePrint_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        #endregion
+
+        #region Нажатие кнопки 2
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            //DataGridToExcel(dataGridView1);
+        }
+
+        #endregion
+
+        #region Нажатие кнопки Печать ярлыка
+
+        private void buttonPrint_Click(object sender, EventArgs e)
+        {
+            PrintControlLabel(dataGridView1);
+        }
+
+        #endregion
+
     }
 }

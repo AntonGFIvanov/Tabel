@@ -321,7 +321,7 @@ namespace Tabel
         }
         #endregion
 
-        #region Функция INSERT
+        #region Добавление записи в TABEL_OK
 
         public static void InsertCommonFile(string soursefile, int kcname)
         {
@@ -491,6 +491,7 @@ namespace Tabel
 
         #endregion
 
+
         // События
 
         #region Нажатие кнопки 1
@@ -517,8 +518,6 @@ namespace Tabel
                     PartIme();
                     string strSQL = "SELECT * FROM " + openFileDialog1.FileName;
                     dataGridView1.DataSource = DTselect(strSQL, connectionStringBase);
-                    label2.Text = openFileDialog1.FileName;
-
                     button1.Text = "ВЫПОЛНЕНО";
                 }
             }
@@ -571,14 +570,49 @@ namespace Tabel
             {
                 if (!(dataGridView1.DataSource == null))
                 {
-                    int rowcount = dataGridView1.RowCount;
-                    int tn = 0;
-                    int bold = 0, dnf = 0, dno = 0, dnp = 0, dou = 0, prg = 0, wd = 0, adm = 0, dnr = 0, med = 0, kolh = 0;
-                    decimal cas = 0, dk = 0, rem = 0, kbn = 0, prz = 0, cas_pr = 0, nowpr = 0, nowsw = 0, nowwh = 0, prazp = 0, d_scet = 0, gos = 0, cas_scet = 0, prf1 = 0;
-                    decimal noc = 0, noc2 = 0, dh = 0, shr = 0, np = 0;
-                    int dpro = 0;
-                    int cas7 = 0;
-                    bool readcas7 = false;
+                    #region Объявление переменных для подсчета данных
+
+                    int rowcount = dataGridView1.RowCount;  //
+
+                    int tn = 0,     //
+                        bold = 0,   //
+                        dnf = 0,    //
+                        dno = 0,    //
+                        dnp = 0,    //
+                        dou = 0,    //
+                        prg = 0,    //
+                        wd = 0,     //
+                        adm = 0,    //
+                        dnr = 0,    //
+                        med = 0,    //
+                        kolh = 0,   //
+                        dpro = 0,   //
+                        cas7 = 0;   //
+
+                    decimal cas = 0,    //
+                        dk = 0,         //
+                        rem = 0,        //
+                        kbn = 0,        //
+                        prz = 0,        //
+                        cas_pr = 0,     //
+                        nowpr = 0,      //
+                        nowsw = 0,      //
+                        nowwh = 0,      //
+                        prazp = 0,      //
+                        d_scet = 0,     //
+                        gos = 0,        //
+                        cas_scet = 0,   //
+                        prf1 = 0,       //
+                        noc = 0,        //
+                        noc2 = 0,       //
+                        dh = 0,         //
+                        shr = 0,        //
+                        np = 0;         //
+
+                    bool readcas7 = false;  //
+
+                    #endregion
+                  
 
                     //Переменные для работы с периодами
                     #region Переменные периодов 
@@ -1250,7 +1284,7 @@ namespace Tabel
             CopyFile("d:\\TABEL\\BASE\\period.DBF", "\\\\Mztm\\Trmash_Data\\Maz\\NEWTABEL\\BaseP\\" + sourcefnPer + ".DBF");
             InsertCommonFile(sourcefn, kcname);
             //CopyFile("d:\\TABEL\\COPY\\TABEL.DBF", "d:\\TABEL\\BASE\\TABEL.DBF");
-            CopyFile("d:\\TABEL\\COPY\\period.DBF", "d:\\TABEL\\BASE\\period.DBF");
+            //CopyFile("d:\\TABEL\\COPY\\period.DBF", "d:\\TABEL\\BASE\\period.DBF");
             button4.Text = "ВЫПОЛНЕНО";
             
             //FormCorrection.UpDataGrid(comboBox1, dataGridView1);
@@ -1263,7 +1297,7 @@ namespace Tabel
 
         private void button5_Click(object sender, EventArgs e)
         {
-            Application.Exit();
+            this.Close();
         }
         #endregion
 
